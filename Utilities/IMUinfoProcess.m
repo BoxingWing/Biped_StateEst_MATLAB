@@ -16,12 +16,16 @@ classdef IMUinfoProcess < matlab.System
 
         function [freeAcc,Eul_woOff,omegaW] = stepImpl(obj,acc,eul,omegaL,time)
                 eulNew=[eul(3) eul(2) eul(1)];
-                freeAcc=eul2rotm(eulNew)*acc-[0;0;9.81];
+                %freeAcc=eul2rotm(eulNew)*acc-[0;0;9.81];
                 if time>obj.offsetTriggerTime && obj.timeOld<obj.offsetTriggerTime
                     obj.offsetYaw=eul(3);
                 end
                 Eul_woOff=[eul(1),eul(2),eul(3)-obj.offsetYaw];
+                %Eul_woOff=[eul(1),eul(2),eul(3)];
+
+
                 R=Rz(Eul_woOff(3))*Ry(Eul_woOff(2))*Rx(Eul_woOff(1));
+                freeAcc=R*acc-[0;0;9.81];
                 omegaW=R*omegaL;
                 obj.timeOld=time;
         end

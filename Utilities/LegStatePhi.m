@@ -6,6 +6,7 @@ classdef LegStatePhi < matlab.System
     properties (Access=private)
         StartFlag=false;
         legSwingOld=2;
+        phaseAllOld=0;
     end
 
     methods(Access = protected)
@@ -31,10 +32,11 @@ classdef LegStatePhi < matlab.System
 
            end
            
-           if legSwing~=obj.legSwingOld && obj.StartFlag==false
+           if phaseAll~=obj.phaseAllOld && obj.StartFlag==false
                obj.StartFlag=true;
            end
            obj.legSwingOld=legSwing;
+           obj.phaseAllOld=phaseAll;
 
            EN=~obj.StartFlag;
         end
