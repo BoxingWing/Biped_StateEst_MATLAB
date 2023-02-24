@@ -21,7 +21,7 @@ classdef IMUinfoProcess < matlab.System
                     obj.offsetYaw=eul(3);
                 end
                 Eul_woOff=[eul(1),eul(2),eul(3)-obj.offsetYaw];
-                R=Rz(eul(3))*Ry(eul(2))*Rx(eul(1));
+                R=Rz(Eul_woOff(3))*Ry(Eul_woOff(2))*Rx(Eul_woOff(1));
                 omegaW=R*omegaL;
                 obj.timeOld=time;
         end

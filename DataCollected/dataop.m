@@ -122,73 +122,92 @@ save('TestDataV1_02_22.mat','phaseAll_ts','legSwing_ts',...
 disp('Data Saved!');
 end
 
-figure;%1
-for i = 1:5
-    subplot(4,5,i);
-    plot(qr(:,i)/pi*180,'b');
-    hold on;
-    plot(Terminal_ik(:,i)/pi*180,'r');
-end
-
-subplot(4,5,6);
-plot(pas(:,1)/pi*180,'b');
+figure();
+plot(time',acc(:,1));
 hold on;
-plot(Terminal_ik(:,6)/pi*180,'r');
-subplot(4,5,7);
-plot(pas(:,2)/pi*180,'b');
-hold on;
-plot(Terminal_ik(:,7)/pi*180,'r');
+plot(time',acc(:,2));
+plot(time',acc(:,3));
 
-for i = 1:5
-    subplot(4,5,i+10);
-    plot(ql(:,i)/pi*180,'b');
-    hold on;
-    plot(Terminal_ik(:,7+i)/pi*180,'r');
-end
+legend('accx','accy','accz');
 
-subplot(4,5,16);
-plot(pas(:,3)/pi*180,'b');
-hold on;
-plot(Terminal_ik(:,13)/pi*180,'r');
-subplot(4,5,17);
-plot(pas(:,4)/pi*180,'b');
-hold on;
-plot(Terminal_ik(:,14)/pi*180,'r');
+startT=53;
+endT=55;
+tmp=find(time>startT);
+startTn=tmp(1);
+tmp=find(time>endT);
+endTn=tmp(1);
 
-figure;%2
-% px, py, pz, yaw, pitch
-for i = 1:10
-    subplot(3,5,i);
-    plot(Terminal_ref(:,i),'r');
-    hold on;
-    plot(Terminal_fk(:,i),'b');
-end
+accX_std=std(acc(startTn:endTn,1))^2
+accY_std=std(acc(startTn:endTn,2))^2
+accZ_std=std(acc(startTn:endTn,3))^2
 
-figure;%3
-for i = 1:4
-    subplot(3,4,i);
-    plot(Ir(:,i));
-end
-for i = 1:4
-    subplot(3,4,i+4);
-    plot(Il(:,i));
-end
-
-figure;%4
-for i = 1:9
-    subplot(3,3,i);
-    plot(imu(:,i));
-end
-
-figure;%5
-for i = 1:7
-    subplot(4,5,i);
-    plot(Terminal_ik(:,i)/pi*180);
-end
-for i = 8:14
-    subplot(4,5,i+3);
-    plot(Terminal_ik(:,i)/pi*180);
-end
+% figure;%1
+% for i = 1:5
+%     subplot(4,5,i);
+%     plot(qr(:,i)/pi*180,'b');
+%     hold on;
+%     plot(Terminal_ik(:,i)/pi*180,'r');
+% end
+% 
+% subplot(4,5,6);
+% plot(pas(:,1)/pi*180,'b');
+% hold on;
+% plot(Terminal_ik(:,6)/pi*180,'r');
+% subplot(4,5,7);
+% plot(pas(:,2)/pi*180,'b');
+% hold on;
+% plot(Terminal_ik(:,7)/pi*180,'r');
+% 
+% for i = 1:5
+%     subplot(4,5,i+10);
+%     plot(ql(:,i)/pi*180,'b');
+%     hold on;
+%     plot(Terminal_ik(:,7+i)/pi*180,'r');
+% end
+% 
+% subplot(4,5,16);
+% plot(pas(:,3)/pi*180,'b');
+% hold on;
+% plot(Terminal_ik(:,13)/pi*180,'r');
+% subplot(4,5,17);
+% plot(pas(:,4)/pi*180,'b');
+% hold on;
+% plot(Terminal_ik(:,14)/pi*180,'r');
+% 
+% figure;%2
+% % px, py, pz, yaw, pitch
+% for i = 1:10
+%     subplot(3,5,i);
+%     plot(Terminal_ref(:,i),'r');
+%     hold on;
+%     plot(Terminal_fk(:,i),'b');
+% end
+% 
+% figure;%3
+% for i = 1:4
+%     subplot(3,4,i);
+%     plot(Ir(:,i));
+% end
+% for i = 1:4
+%     subplot(3,4,i+4);
+%     plot(Il(:,i));
+% end
+% 
+% figure;%4
+% for i = 1:9
+%     subplot(3,3,i);
+%     plot(imu(:,i));
+% end
+% 
+% figure;%5
+% for i = 1:7
+%     subplot(4,5,i);
+%     plot(Terminal_ik(:,i)/pi*180);
+% end
+% for i = 8:14
+%     subplot(4,5,i+3);
+%     plot(Terminal_ik(:,i)/pi*180);
+% end
 
 
 
