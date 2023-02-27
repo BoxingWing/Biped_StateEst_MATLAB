@@ -64,8 +64,10 @@ classdef KalmanFilter_DIY_TrustRegion_h < matlab.System
             blkQ3=diag(obj.Q_wfeW)*Xi*eye(6);
             blkQ4=diag(obj.Q_waL);
             Q=blkdiag(blkQ1,blkQ2,blkQ3,blkQ4);
-            blkR1=diag(obj.R_wfeL)*Xi*eye(6);
-            blkR2=diag(obj.R_wdfeL)*Xi*eye(6);
+%             blkR1=diag(obj.R_wfeL)*Xi*eye(6);
+%             blkR2=diag(obj.R_wdfeL)*Xi*eye(6);
+            blkR1=diag(obj.R_wfeL)*eye(6);
+            blkR2=diag(obj.R_wdfeL)*eye(6);
             blkR3=diag(obj.R_wh)*Xih*eye(2);
             R=blkdiag(blkR1,blkR2,blkR3);
             
