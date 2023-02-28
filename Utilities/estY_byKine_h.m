@@ -25,7 +25,7 @@ classdef estY_byKine_h < matlab.System
             pArray_W=R*pArray_B;
             vArray_W=zeros(3,2);
             for i=1:1:2
-                vArray_W(:,i)=R*(pArray_B(:,i)-obj.pArrayOld(:,i))/dt-cross(OmegaW,pArray_W(:,i));
+                vArray_W(:,i)=-R*(pArray_B(:,i)-obj.pArrayOld(:,i))/dt-cross(OmegaW,pArray_W(:,i));
             end
             if obj.iniCount<0.5
                 vArray_W=zeros(3,2);
