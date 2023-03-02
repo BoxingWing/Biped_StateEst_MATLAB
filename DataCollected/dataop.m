@@ -122,6 +122,25 @@ save('TestDataV1_02_22.mat','phaseAll_ts','legSwing_ts',...
 disp('Data Saved!');
 end
 
+answer = questdlg("Save current data into a TXT File?");
+if strcmp(answer,'Yes')
+ftxt=fopen('TestDataV1_02_22.txt','wt');
+save('TestDataV1_02_22.mat','phaseAll_ts','legSwing_ts',...
+    "fk_real_r_ts","fk_real_l_ts","RPY_ts","acc_ts","gyro_ts", ...
+    "time");
+for i=1:1:length(time)
+    fprintf(ftxt,'%.5f %.5f %.5f ',acc(i,1),acc(i,2),acc(i,3));
+    fprintf(ftxt,'%.5f %.5f %.5f ',RPY(i,1),RPY(i,2),RPY(i,3));
+    fprintf(ftxt,'%.5f %.5f %.5f ',gyro(i,1),gyro(i,2),gyro(i,3));
+    fprintf(ftxt,'%.5f ',phaseAll(i)/500);
+    fprintf(ftxt,'%.5f ',legSwing(i));
+    fprintf(ftxt,'%.5f %.5f %.5f %.5f %.5f %.5f\n',fk_real_r(i,1),...
+        fk_real_r(i,2),fk_real_r(i,3),fk_real_l(i,1),fk_real_l(i,2),fk_real_l(i,3));
+end
+fclose(ftxt);
+disp('Data Saved!');
+end
+
 figure();
 plot(time',acc(:,1));
 hold on;
