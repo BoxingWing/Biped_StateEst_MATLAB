@@ -1,0 +1,2 @@
+dataOut=out.simout.signals.values;
+dataOut=reshape(dataOut,12,:);
