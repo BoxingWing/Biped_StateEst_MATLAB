@@ -1,7 +1,7 @@
 %%
 close all;
 clear variables;
-data = csvread('test.csv');
+data = csvread('test_pvt0.csv');
 
 [num,~] = size(data);
 qr = zeros(num,5);
@@ -81,30 +81,55 @@ Terminal_ref = data(:,102:111);
 
 imu = data(:,67:75);
 
-pas = data(:,21:24);
+pas = data(:,21:24); % right up, right down, left up, left down
 
-Terminal_ik = data(:,78:91);
+Terminal_ik = data(:,78:91); % right first
 
 Terminal_fk = data(:,92:101);
 
 
-startN=1000;
+startN=21000;
+endN=length(Terminal_fk(:,1))-100;
 
-phaseAll=data(startN:end,117);
+phaseAll=data(startN:endN,116);
 
-legSwing=data(startN:end,116); % 1 for right leg, 2 for left leg
+legSwing=data(startN:endN,115); % 1 for right leg, 2 for left leg
 
-fk_real_r=data(startN:end,92:94);
+fk_real_r=data(startN:endN,92:94);
 
-fk_real_l=data(startN:end,97:99);
+fk_real_l=data(startN:endN,97:99);
 
-RPY=data(startN:end,67:69)/180*pi; % rad/s
+RPY=data(startN:endN,67:69)/180*pi; % rad/s
 
-acc=data(startN:end,70:72);
+acc=data(startN:endN,70:72);
 
-gyro=data(startN:end,73:75); % rad/s
+gyro=data(startN:endN,73:75); % rad/s
+
+pas_delta=pas(startN:endN,:)-Terminal_ik(startN:endN,[6,7,13,14]);
 
 time=(0:1:length(phaseAll)-1)*0.001;
+
+legSptInd=zeros(2,length(time)); % supporting indicator
+for i=1:1:length(time)
+    if pas_delta(i,1)<-0.053
+        legSptInd(1,i)=1;
+    elseif pas_delta(i,1)>-0.0542*0.6
+        legSptInd(1,i)=0;
+    else
+        if i>=2
+            legSptInd(1,i)=legSptInd(1,i-1);
+        end
+    end
+    if pas_delta(i,3)>0.052
+        legSptInd(2,i)=1;
+    elseif pas_delta(i,3)<0.0536*0.6
+        legSptInd(2,i)=0;
+    else
+        if i>2
+            legSptInd(2,i)=legSptInd(2,i-1);
+        end
+    end
+end
 
 phaseAll_ts=timeseries(phaseAll,time);
 legSwing_ts=timeseries(legSwing,time);
@@ -113,21 +138,46 @@ fk_real_l_ts=timeseries(fk_real_l,time);
 RPY_ts=timeseries(RPY,time);
 acc_ts=timeseries(acc,time);
 gyro_ts=timeseries(gyro,time);
+legSptInd_ts=timeseries(legSptInd,time);
 
+
+figure();
+subplot(3,1,1)
+yyaxis left
+plot(time,pas_delta(:,[1,2]));
+legend('r_upp','r_down');
+yyaxis right
+plot(time,legSwing-1);
+hold on;
+plot(time,legSptInd(1,:));
+
+subplot(3,1,2)
+yyaxis left
+plot(time,pas_delta(:,[3,4]));
+legend('l_upp','l_down');
+yyaxis right
+plot(time,-legSwing+2);
+hold on;
+plot(time,legSptInd(2,:));
+
+subplot(3,1,3)
+plot(time,legSptInd(1,:));
+hold on;
+plot(time,legSptInd(2,:));
+legend('r','l');
+
+fileName='TestData_v2.mat';
 answer = questdlg("Save current data into a MatFile?");
 if strcmp(answer,'Yes')
-save('TestDataV1_02_22.mat','phaseAll_ts','legSwing_ts',...
+save(fileName,'phaseAll_ts','legSwing_ts',...
     "fk_real_r_ts","fk_real_l_ts","RPY_ts","acc_ts","gyro_ts", ...
-    "time");
+    "time","legSptInd_ts");
 disp('Data Saved!');
 end
 
 answer = questdlg("Save current data into a TXT File?");
 if strcmp(answer,'Yes')
-ftxt=fopen('TestDataV1_02_22.txt','wt');
-save('TestDataV1_02_22.mat','phaseAll_ts','legSwing_ts',...
-    "fk_real_r_ts","fk_real_l_ts","RPY_ts","acc_ts","gyro_ts", ...
-    "time");
+ftxt=fopen([fileNmae,'txt'],'wt');
 for i=1:1:length(time)
     fprintf(ftxt,'%.5f %.5f %.5f ',acc(i,1),acc(i,2),acc(i,3));
     fprintf(ftxt,'%.5f %.5f %.5f ',RPY(i,1),RPY(i,2),RPY(i,3));
