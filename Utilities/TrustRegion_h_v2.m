@@ -1,7 +1,7 @@
 classdef TrustRegion_h_v2 < matlab.System
     properties
         k_few=10;
-        k_fez2zero=10^-3;
+        k_fez2zero=10;
     end
 
     properties (Access=private)
@@ -14,25 +14,24 @@ classdef TrustRegion_h_v2 < matlab.System
 
         end
 
-        function [Xi,Xih,diagXi,diagXih] = stepImpl(obj,LegState,LegPhi,pW)
-           pW_M=reshape(pW,3,2);
-           C=zeros(3,3,2);
-           Ch=zeros(2,1);
+        function [Xi,Xih,diagXi,diagXih] = stepImpl(obj,LegState)
+           xiDiag=ones(2,3);
+           xiHDiag=ones(2,1);
            for i=1:1:2
                 %Cphi=CphiFun(LegPhi(i),LegState(i),obj.Cphi_W);
-                Cphi=CphiFun(0.5,LegState(i),obj.Cphi_W);
-                Cz=CzFun(pW_M(3,i),obj.Cz_kp,obj.Cz_kn);
-
-%                 C(:,:,i)=Cphi*diag([1,1,Cz]);
-%                 Ch(i)=Cphi*Cz;
-                C(:,:,i)=Cphi*diag([1,1,1]);
-                Ch(i)=Cphi*1;
+                %Cphi=CphiFun(0.5,LegState(i),obj.Cphi_W);
+                if LegState(i)>0.8
+                    xiDiag(i,:)=[1,1,obj.k_few];
+                    xiHDiag(i)=1;
+                else
+                    xiDiag(i,:)=[obj.k_few,obj.k_few,obj.k_few];
+                    xiHDiag(i)=obj.k_fez2zero;
+                end
            end
-           Xi=eye(6)+obj.k*(eye(6)-blkdiag(C(:,:,1), ...
-               C(:,:,2)));
-           Xih=eye(2)+obj.k_h*(eye(2)-diag(Ch));
+           Xi=diag(reshape(xiDiag,6,1));
+           Xih=diag(xiHDiag);
            diagXi=diag(Xi);
-           diagXih=Ch;
+           diagXih=diag(Xih);
         end
 
         function resetImpl(obj)

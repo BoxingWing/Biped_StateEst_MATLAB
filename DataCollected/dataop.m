@@ -139,6 +139,7 @@ RPY_ts=timeseries(RPY,time);
 acc_ts=timeseries(acc,time);
 gyro_ts=timeseries(gyro,time);
 legSptInd_ts=timeseries(legSptInd,time);
+pas_delta_ts=timeseries(pas_delta,time);
 
 
 figure();
@@ -171,7 +172,7 @@ answer = questdlg("Save current data into a MatFile?");
 if strcmp(answer,'Yes')
 save(fileName,'phaseAll_ts','legSwing_ts',...
     "fk_real_r_ts","fk_real_l_ts","RPY_ts","acc_ts","gyro_ts", ...
-    "time","legSptInd_ts");
+    "time","legSptInd_ts","pas_delta_ts");
 disp('Data Saved!');
 end
 
