@@ -37,8 +37,8 @@ classdef KalmanFilter_DIY_TrustRegion_h < matlab.System
                 zeros(3,3),-eye(3)];
             blkCa1=[-0.5*eye(3)*(obj.dt)^2*0;
                 -0.5*eye(3)*(obj.dt)^2*0];
-            blkCa2=[-eye(3)*obj.dt*0;
-                -eye(3)*obj.dt*0;];
+            blkCa2=[-eye(3)*obj.dt*1;
+                -eye(3)*obj.dt*1;];
             e3=zeros(1,6);e3(3)=1;
             e6=zeros(1,6);e6(6)=1;
             obj.C=[blkC1,eye(6),blkCa1;blkC2,zeros(6,6),blkCa2; ...

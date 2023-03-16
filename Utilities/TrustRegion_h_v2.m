@@ -28,7 +28,7 @@ classdef TrustRegion_h_v2 < matlab.System
                     xiHDiag(i)=obj.k_fez2zero;
                 end
            end
-           Xi=diag(reshape(xiDiag,6,1));
+           Xi=diag([xiDiag(1,:),xiDiag(2,:)]);
            Xih=diag(xiHDiag);
            diagXi=diag(Xi);
            diagXih=diag(Xih);

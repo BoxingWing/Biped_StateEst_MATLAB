@@ -1,7 +1,7 @@
 %%
 close all;
 clear variables;
-data = csvread('test_pvt0.csv');
+data = csvread('test.csv');
 
 [num,~] = size(data);
 qr = zeros(num,5);
@@ -87,17 +87,22 @@ Terminal_ik = data(:,78:91); % right first
 
 Terminal_fk = data(:,92:101);
 
+figure();
+subplot(2,1,1)
+plot(imu(:,1));
+subplot(2,1,2)
+plot(Terminal_fk(:,3));
 
-startN=21000;
-endN=length(Terminal_fk(:,1))-100;
+startN=67800;
+endN=108200;
 
 phaseAll=data(startN:endN,116);
 
 legSwing=data(startN:endN,115); % 1 for right leg, 2 for left leg
 
-fk_real_r=data(startN:endN,92:94);
+fk_real_r=data(startN:endN,92:94)-[0,0.125,0];
 
-fk_real_l=data(startN:endN,97:99);
+fk_real_l=data(startN:endN,97:99)+[0,0.125,0];
 
 RPY=data(startN:endN,67:69)/180*pi; % rad/s
 
@@ -200,8 +205,8 @@ plot(time',acc(:,3));
 
 legend('accx','accy','accz');
 
-startT=53;
-endT=55;
+startT=1;
+endT=6;
 tmp=find(time>startT);
 startTn=tmp(1);
 tmp=find(time>endT);

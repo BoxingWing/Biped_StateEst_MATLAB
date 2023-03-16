@@ -20,7 +20,8 @@ classdef estY_byKine_h < matlab.System
         function [ym,pArray_W_kine,vArray_W_kine] = stepImpl(obj,pArray_B,RPY,OmegaW,dt)
             % omegaB must be the world coordinate
             % pArray_B is the foot-end position in body coordinate, unit: m
-            R=Rz(RPY(3))*Ry(RPY(2))*Rx(RPY(1));
+            %R=Rz(RPY(3))*Ry(RPY(2))*Rx(RPY(1));
+            R=eul2rotm([RPY(3),RPY(2),RPY(1)]);
             pArray_B=reshape(pArray_B,3,2);
             pArray_W=R*pArray_B;
             vArray_W=zeros(3,2);
