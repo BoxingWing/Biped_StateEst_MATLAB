@@ -1,6 +1,6 @@
 classdef LegSptInd < matlab.System
     properties
-        maxPhiCount=500;
+        
     end
 
     properties (Access=private)
@@ -13,18 +13,22 @@ classdef LegSptInd < matlab.System
 
         end
 
-        function legSptInd = stepImpl(obj,pas_delta)
+        function legSptInd = stepImpl(obj,pas_delta,legPhi,legState)
             legSptInd = obj.legSptIndOld;
             if pas_delta(1)<-0.06
                 legSptInd(1)=1;
-            elseif pas_delta(1)>-0.0542*0.7
-                legSptInd(1)=0;
+            elseif pas_delta(1)>-0.0542*0.5
+                if legState(1)>0.5 && legPhi(1)>0.8 || legState(1)<0.5
+                    legSptInd(1)=0;
+                end
             end
 
             if pas_delta(3)>0.06
                 legSptInd(2)=1;
-            elseif pas_delta(3)<0.0536*0.7
-                legSptInd(2)=0;
+            elseif pas_delta(3)<0.0536*0.5
+                if legState(2)>0.5 && legPhi(2)>0.8 || legState(2)<0.5
+                    legSptInd(2)=0;
+                end
             end
             obj.legSptIndOld=legSptInd;
         end

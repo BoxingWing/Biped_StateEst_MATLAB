@@ -6,6 +6,7 @@ classdef KalmanFilter_DIY_TrustRegion_h < matlab.System
         Q_wVCoM=[1e-7,1e-9,1e-5];
         Q_wfeW=ones(6,1)*(1e-6);
         Q_waL=ones(3,1)*(1e-3);
+        Q_wau=[2,2,5]*(1e-4);
         R_wfeL=ones(6,1)*(1e-6);
         R_wdfeL=ones(6,1)*(1e-3);
         R_wh=ones(2,1)*(1e-6);
@@ -16,6 +17,7 @@ classdef KalmanFilter_DIY_TrustRegion_h < matlab.System
         B;
         C;
         G;
+        Qu;
         XOld;
         POld;
         count;
@@ -48,6 +50,7 @@ classdef KalmanFilter_DIY_TrustRegion_h < matlab.System
             obj.XOld=zeros(nX,1);
             obj.POld=eye(nX);
             obj.G=eye(nX);
+            obj.Qu=obj.B*diag(obj.Q_wau)*(obj.B)';
         end
         
         function [xhat,P] = stepImpl(obj,u,y,x0,p0,Xi,Xih,Reset)
@@ -64,6 +67,7 @@ classdef KalmanFilter_DIY_TrustRegion_h < matlab.System
             blkQ3=diag(obj.Q_wfeW)*Xi*eye(6);
             blkQ4=diag(obj.Q_waL);
             Q=blkdiag(blkQ1,blkQ2,blkQ3,blkQ4);
+            Q=Q+obj.Qu;
 %             blkR1=diag(obj.R_wfeL)*Xi*eye(6);
 %             blkR2=diag(obj.R_wdfeL)*Xi*eye(6);
             blkR1=diag(obj.R_wfeL)*eye(6);

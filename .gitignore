@@ -1,3 +1,6 @@
 # List of untracked files to ignore
 Build/
 Cache/
+DataCollected/test_stepping.csv
+
+slprj/_cgxe/estTest_calibration/info/

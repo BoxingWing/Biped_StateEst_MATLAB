@@ -87,18 +87,31 @@ Terminal_ik = data(:,78:91); % right first
 
 Terminal_fk = data(:,92:101);
 
+pasRef=zeros(length(pas(:,1)),4);
+for i=1:1:length(pas(:,1))
+    CDG=3.2812;
+    FGH=2.8623;
+    sign=1;
+    pasRef(i,1)=-sign*(CDG-(sign*qr(i,4)+pi/2));
+    pasRef(i,2)=sign*(FGH-pi-sign*pasRef(i,1));
+    sign=-1;
+    pasRef(i,3)=-sign*(CDG-(sign*ql(i,4)+pi/2));
+    pasRef(i,4)=sign*(FGH-pi-sign*pasRef(i,3));
+end
+
+
 figure();
 subplot(2,1,1)
 plot(imu(:,1));
 subplot(2,1,2)
 plot(Terminal_fk(:,3));
 
-startN=67800;
-endN=108200;
+startN=50000;
+endN=90000;
 
-phaseAll=data(startN:endN,116);
+phaseAll=data(startN:endN,117);
 
-legSwing=data(startN:endN,115); % 1 for right leg, 2 for left leg
+legSwing=data(startN:endN,116); % 1 for right leg, 2 for left leg
 
 fk_real_r=data(startN:endN,92:94)-[0,0.125,0];
 
@@ -110,9 +123,20 @@ acc=data(startN:endN,70:72);
 
 gyro=data(startN:endN,73:75); % rad/s
 
-pas_delta=pas(startN:endN,:)-Terminal_ik(startN:endN,[6,7,13,14]);
+%pas_delta=pas(startN:endN,:)-Terminal_ik(startN:endN,[6,7,13,14]);
+
+pas_delta=pas(startN:endN,:)-pasRef(startN:endN,:);
+
+%pas_delta_New=pas(startN:endN,:)-pasRef(startN:endN,:);
 
 time=(0:1:length(phaseAll)-1)*0.001;
+
+% figure();
+% plot(pas_delta(:,1));
+% hold on;
+% plot(pas_delta_New(:,1));
+% legend('old','New');
+
 
 legSptInd=zeros(2,length(time)); % supporting indicator
 for i=1:1:length(time)
